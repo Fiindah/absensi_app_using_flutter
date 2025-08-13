@@ -400,7 +400,7 @@ class _RegisterPageState extends State<RegisterPage> {
           gradient: LinearGradient(
             colors: isDisabled
                 ? [Colors.grey.shade600, Colors.grey.shade700]
-                : [AppColor.myblue, AppColor.myblue1, AppColor.myblue],
+                : [AppColor.myblue, AppColor.myblue],
           ),
           boxShadow: [
             BoxShadow(
@@ -450,8 +450,8 @@ class _RegisterPageState extends State<RegisterPage> {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
-              decorationColor: Colors.white,
+              // decoration: TextDecoration.underline,
+              // decorationColor: Colors.white,
             ),
           ),
         ),

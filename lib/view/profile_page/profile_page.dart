@@ -155,185 +155,239 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.neutral,
-      appBar: AppBar(
-        title: const Text(
-          'Profil Pengguna',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        backgroundColor: AppColor.myblue,
-        elevation: 0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColor.myblue, AppColor.myblue1],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body:
-          _isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : RefreshIndicator(
-                onRefresh: _loadUserProfile,
-                color: AppColor.myblue,
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Column(
-                        children: [
-                          SizedBox(height: 24),
-                          CircleAvatar(
-                            radius: 60,
-                            backgroundColor: AppColor.myblue,
-                            backgroundImage:
-                                _userProfile?.profilePhoto != null &&
-                                        _userProfile!.profilePhoto!.isNotEmpty
-                                    ? NetworkImage(
-                                          _userProfile!.profilePhoto!
-                                                  .startsWith('http')
-                                              ? _userProfile!.profilePhoto!
-                                              : '${Endpoint.baseUrl}/public/${_userProfile!.profilePhoto!}',
-                                        )
-                                        as ImageProvider<Object>
-                                    : const AssetImage(
-                                      'assets/images/default_profile.png',
-                                    ),
-                            onBackgroundImageError: (exception, stackTrace) {
-                              debugPrint('Error loading image: $exception');
-                            },
-                            child:
-                                _userProfile?.profilePhoto == null ||
-                                        _userProfile!.profilePhoto!.isEmpty
-                                    ? const Icon(
-                                      Icons.person,
-                                      size: 60,
-                                      color: Colors.white,
-                                    )
-                                    : null,
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            _userProfile?.name ?? 'Nama Pengguna',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.myblue,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            _userProfile?.email ?? 'email@example.com',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Colors.grey.shade600,
-                            ),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWideScreen = constraints.maxWidth > 600;
+
+          return Center(
+            child: Container(
+              child: Container(
+                width: isWideScreen ? 400 : double.infinity,
+                decoration: isWideScreen
+                    ? BoxDecoration(
+                        color: Colors.white,
+                        // borderRadius: BorderRadius.circular(16),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
                           ),
                         ],
+                      )
+                    : null,
+                child: Scaffold(
+                  backgroundColor: AppColor.neutral,
+                  appBar: AppBar(
+                    title: const Text(
+                      'Profil Pengguna',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
                       ),
-                      const SizedBox(height: 24),
-                      // User Information Card
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Card(
-                          color: Colors.white,
-                          elevation: 6,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
+                    ),
+                    backgroundColor: AppColor.myblue,
+                    elevation: 0,
+                    centerTitle: true,
+                    flexibleSpace: Container(
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [AppColor.myblue, AppColor.myblue1],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                      ),
+                    ),
+                  ),
+                  body: _isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : RefreshIndicator(
+                          onRefresh: _loadUserProfile,
+                          color: AppColor.myblue,
+                          child: SingleChildScrollView(
+                            physics: const AlwaysScrollableScrollPhysics(),
                             child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                _buildInfoSectionTitle('Informasi Pribadi'),
+                                Column(
+                                  children: [
+                                    SizedBox(height: 24),
+                                    CircleAvatar(
+                                      radius: 60,
+                                      backgroundColor: AppColor.myblue,
+                                      backgroundImage:
+                                          _userProfile?.profilePhoto != null &&
+                                              _userProfile!
+                                                  .profilePhoto!
+                                                  .isNotEmpty
+                                          ? NetworkImage(
+                                                  _userProfile!.profilePhoto!
+                                                          .startsWith('http')
+                                                      ? _userProfile!
+                                                            .profilePhoto!
+                                                      : '${Endpoint.baseUrl}/public/${_userProfile!.profilePhoto!}',
+                                                )
+                                                as ImageProvider<Object>
+                                          : const AssetImage(
+                                              'assets/images/default_profile.png',
+                                            ),
+                                      onBackgroundImageError:
+                                          (exception, stackTrace) {
+                                            debugPrint(
+                                              'Error loading image: $exception',
+                                            );
+                                          },
+                                      child:
+                                          _userProfile?.profilePhoto == null ||
+                                              _userProfile!
+                                                  .profilePhoto!
+                                                  .isEmpty
+                                          ? const Icon(
+                                              Icons.person,
+                                              size: 60,
+                                              color: Colors.white,
+                                            )
+                                          : null,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      _userProfile?.name ?? 'Nama Pengguna',
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColor.myblue,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      _userProfile?.email ??
+                                          'email@example.com',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 24),
+                                // User Information Card
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24.0,
+                                  ),
+                                  child: Card(
+                                    color: Colors.white,
+                                    elevation: 6,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          _buildInfoSectionTitle(
+                                            'Informasi Pribadi',
+                                          ),
 
-                                _buildDivider(),
-                                _buildInfoRow(
-                                  Icons.person_outline,
-                                  'Nama',
-                                  _userProfile?.name ?? '-',
-                                ),
-                                _buildDivider(),
-                                _buildInfoRow(
-                                  Icons.email_outlined, // Changed icon
-                                  'Email',
-                                  _userProfile?.email ?? '-',
-                                ),
-                                _buildDivider(),
+                                          _buildDivider(),
+                                          _buildInfoRow(
+                                            Icons.person_outline,
+                                            'Nama',
+                                            _userProfile?.name ?? '-',
+                                          ),
+                                          _buildDivider(),
+                                          _buildInfoRow(
+                                            Icons
+                                                .email_outlined, // Changed icon
+                                            'Email',
+                                            _userProfile?.email ?? '-',
+                                          ),
+                                          _buildDivider(),
 
-                                _buildDivider(),
-                                _buildInfoRow(
-                                  Icons.wc_outlined, // Changed icon
-                                  'Jenis Kelamin',
-                                  _formatGender(_userProfile?.jenisKelamin),
-                                ),
-                                _buildDivider(),
+                                          _buildDivider(),
+                                          _buildInfoRow(
+                                            Icons.wc_outlined, // Changed icon
+                                            'Jenis Kelamin',
+                                            _formatGender(
+                                              _userProfile?.jenisKelamin,
+                                            ),
+                                          ),
+                                          _buildDivider(),
 
-                                const SizedBox(height: 20),
-                                _buildInfoSectionTitle('Informasi Akademik'),
-                                _buildInfoColumn(
-                                  Icons.group_outlined, // Changed icon
-                                  'Batch :',
-                                  _userProfile?.batchKe ?? '-',
+                                          const SizedBox(height: 20),
+                                          _buildInfoSectionTitle(
+                                            'Informasi Akademik',
+                                          ),
+                                          _buildInfoColumn(
+                                            Icons
+                                                .group_outlined, // Changed icon
+                                            'Batch :',
+                                            _userProfile?.batchKe ?? '-',
+                                          ),
+                                          _buildDivider(),
+                                          _buildInfoColumn(
+                                            Icons
+                                                .school_outlined, // Changed icon
+                                            'Training :',
+                                            _userProfile?.trainingTitle ?? '-',
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
-                                _buildDivider(),
-                                _buildInfoColumn(
-                                  Icons.school_outlined, // Changed icon
-                                  'Training :',
-                                  _userProfile?.trainingTitle ?? '-',
+                                const SizedBox(height: 30),
+
+                                // Action Buttons
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 24.0,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      _buildActionButton(
+                                        label: "Ubah Profil",
+                                        icon: Icons.edit,
+                                        color: AppColor.myblue,
+                                        onPressed: () async {
+                                          final result = await Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const EditProfilePage(),
+                                            ),
+                                          );
+                                          if (result == true) {
+                                            _loadUserProfile();
+                                          }
+                                        },
+                                      ),
+                                      const SizedBox(height: 16),
+                                      _buildActionButton(
+                                        label: "Logout",
+                                        icon: Icons.logout,
+                                        color: Colors.red,
+                                        onPressed:
+                                            _showLogoutConfirmationDialog,
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                                const SizedBox(height: 24),
                               ],
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 30),
-
-                      // Action Buttons
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                        child: Column(
-                          children: [
-                            _buildActionButton(
-                              label: "Ubah Profil",
-                              icon: Icons.edit,
-                              color: AppColor.myblue,
-                              onPressed: () async {
-                                final result = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder:
-                                        (context) => const EditProfilePage(),
-                                  ),
-                                );
-                                if (result == true) {
-                                  _loadUserProfile();
-                                }
-                              },
-                            ),
-                            const SizedBox(height: 16),
-                            _buildActionButton(
-                              label: "Logout",
-                              icon: Icons.logout,
-                              color: Colors.red,
-                              onPressed: _showLogoutConfirmationDialog,
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  ),
                 ),
               ),
+            ),
+          );
+        },
+      ),
     );
   }
 

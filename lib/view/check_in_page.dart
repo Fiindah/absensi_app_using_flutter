@@ -139,90 +139,125 @@ class _CheckInPageState extends State<CheckInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.neutral,
-      appBar: AppBar(
-        title: const Text(
-          'Absen Masuk',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: AppColor.myblue,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColor.myblue, AppColor.myblue1],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body: _currentPosition == null
-          ? const Center(child: CircularProgressIndicator())
-          : Stack(
-              children: [
-                GoogleMap(
-                  onMapCreated: (controller) => _mapController = controller,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      _currentPosition!.latitude,
-                      _currentPosition!.longitude,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWideScreen = constraints.maxWidth > 600;
+
+          return Center(
+            child: Container(
+              width: isWideScreen ? 400 : double.infinity,
+              decoration: isWideScreen
+                  ? BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    )
+                  : null,
+              child: Scaffold(
+                backgroundColor: AppColor.neutral,
+                appBar: AppBar(
+                  title: const Text(
+                    'Absen Masuk',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    zoom: 17,
                   ),
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  markers: {
-                    Marker(
-                      markerId: const MarkerId('current'),
-                      position: LatLng(
-                        _currentPosition!.latitude,
-                        _currentPosition!.longitude,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  backgroundColor: AppColor.myblue,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  centerTitle: true,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppColor.myblue, AppColor.myblue1],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      infoWindow: const InfoWindow(title: 'Lokasi Anda'),
-                    ),
-                    Marker(
-                      markerId: const MarkerId('ppkd'),
-                      position: _ppkdLocation,
-                      infoWindow: const InfoWindow(title: 'PPKD Jakarta Pusat'),
-                    ),
-                  },
-                  circles: {
-                    Circle(
-                      circleId: const CircleId("ppkd_radius"),
-                      center: _ppkdLocation,
-                      radius: 100,
-                      fillColor: Colors.blue.withOpacity(0.2),
-                      strokeColor: Colors.blueAccent,
-                      strokeWidth: 2,
-                    ),
-                  },
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: ElevatedButton.icon(
-                    onPressed: _isLoading ? null : _checkIn,
-                    // icon: const Icon(Icons.login, color: Colors.white),
-                    label: const Text(
-                      "Absen Masuk",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.myblue,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
                   ),
                 ),
-              ],
+                body: _currentPosition == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Stack(
+                        children: [
+                          GoogleMap(
+                            onMapCreated: (controller) =>
+                                _mapController = controller,
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                _currentPosition!.latitude,
+                                _currentPosition!.longitude,
+                              ),
+                              zoom: 17,
+                            ),
+                            myLocationEnabled: true,
+                            myLocationButtonEnabled: true,
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId('current'),
+                                position: LatLng(
+                                  _currentPosition!.latitude,
+                                  _currentPosition!.longitude,
+                                ),
+                                infoWindow: const InfoWindow(
+                                  title: 'Lokasi Anda',
+                                ),
+                              ),
+                              Marker(
+                                markerId: const MarkerId('ppkd'),
+                                position: _ppkdLocation,
+                                infoWindow: const InfoWindow(
+                                  title: 'PPKD Jakarta Pusat',
+                                ),
+                              ),
+                            },
+                            circles: {
+                              Circle(
+                                circleId: const CircleId("ppkd_radius"),
+                                center: _ppkdLocation,
+                                radius: 100,
+                                fillColor: Colors.blue.withOpacity(0.2),
+                                strokeColor: Colors.blueAccent,
+                                strokeWidth: 2,
+                              ),
+                            },
+                          ),
+                          Positioned(
+                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                            child: ElevatedButton.icon(
+                              onPressed: _isLoading ? null : _checkIn,
+                              // icon: const Icon(Icons.login, color: Colors.white),
+                              label: const Text(
+                                "Absen Masuk",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.myblue,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
             ),
+          );
+        },
+      ),
     );
   }
 }

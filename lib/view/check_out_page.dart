@@ -116,74 +116,107 @@ class _CheckOutPageState extends State<CheckOutPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.neutral,
-      appBar: AppBar(
-        title: const Text(
-          'Absen Pulang',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: AppColor.myblue,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColor.myblue, AppColor.myblue1],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body: _currentPosition == null
-          ? const Center(child: CircularProgressIndicator())
-          : Stack(
-              children: [
-                GoogleMap(
-                  onMapCreated: (controller) => _mapController = controller,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                      _currentPosition!.latitude,
-                      _currentPosition!.longitude,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWideScreen = constraints.maxWidth > 600;
+
+          return Center(
+            child: Container(
+              width: isWideScreen ? 400 : double.infinity,
+              decoration: isWideScreen
+                  ? BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    )
+                  : null,
+              child: Scaffold(
+                backgroundColor: AppColor.neutral,
+                appBar: AppBar(
+                  title: const Text(
+                    'Absen Pulang',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    zoom: 16,
                   ),
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: true,
-                  markers: {
-                    Marker(
-                      markerId: const MarkerId('current'),
-                      position: LatLng(
-                        _currentPosition!.latitude,
-                        _currentPosition!.longitude,
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  backgroundColor: AppColor.myblue,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  centerTitle: true,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppColor.myblue, AppColor.myblue1],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
-                      infoWindow: const InfoWindow(title: 'Lokasi Anda'),
-                    ),
-                  },
-                ),
-                Positioned(
-                  bottom: 20,
-                  left: 20,
-                  right: 20,
-                  child: ElevatedButton.icon(
-                    onPressed: _isLoading ? null : _checkOut,
-                    label: const Text(
-                      "Absen Pulang",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.myblue,
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
                     ),
                   ),
                 ),
-              ],
+                body: _currentPosition == null
+                    ? const Center(child: CircularProgressIndicator())
+                    : Stack(
+                        children: [
+                          GoogleMap(
+                            onMapCreated: (controller) =>
+                                _mapController = controller,
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(
+                                _currentPosition!.latitude,
+                                _currentPosition!.longitude,
+                              ),
+                              zoom: 16,
+                            ),
+                            myLocationEnabled: true,
+                            myLocationButtonEnabled: true,
+                            markers: {
+                              Marker(
+                                markerId: const MarkerId('current'),
+                                position: LatLng(
+                                  _currentPosition!.latitude,
+                                  _currentPosition!.longitude,
+                                ),
+                                infoWindow: const InfoWindow(
+                                  title: 'Lokasi Anda',
+                                ),
+                              ),
+                            },
+                          ),
+                          Positioned(
+                            bottom: 20,
+                            left: 20,
+                            right: 20,
+                            child: ElevatedButton.icon(
+                              onPressed: _isLoading ? null : _checkOut,
+                              label: const Text(
+                                "Absen Pulang",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.myblue,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 16.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+              ),
             ),
+          );
+        },
+      ),
     );
   }
 }

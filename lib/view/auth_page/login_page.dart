@@ -147,15 +147,15 @@ class _LoginPageState extends State<LoginPage> {
                           _buildLogo(),
                           const SizedBox(height: 20.0),
                           _buildSubtitle(),
-                          const SizedBox(height: 50.0),
+                          const SizedBox(height: 20.0),
                           _buildLoginForm(),
                           const SizedBox(height: 20.0),
                           _buildLoginButton(),
                           const SizedBox(height: 15.0),
                           _buildForgotPasswordLink(),
-                          const SizedBox(height: 100.0),
+                          const SizedBox(height: 20.0),
                           _buildSignUpLink(),
-                          const SizedBox(height: 10.0),
+                          // const SizedBox(height: 10.0),
                           const CopyrightWidget(
                             appName: 'Endah F N',
                             companyName: 'Si Absensi',
@@ -191,10 +191,27 @@ class _LoginPageState extends State<LoginPage> {
 
   /// Widget untuk logo dan judul.
   Widget _buildLogo() {
+    return Container(
+      width: 130,
+      height: 130,
+      decoration: BoxDecoration(
+        color: AppColor.neutral,
+        shape: BoxShape.circle,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4),
+        child: Column(
+          children: [
+            Image.asset('assets/images/logo.png', width: 120, height: 120),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSubtitle() {
     return Column(
       children: [
-        // Image.asset('assets/images/logo.png', width: 150, height: 150),
-        const SizedBox(height: 20.0),
         Text(
           'Selamat Datang',
           style: GoogleFonts.pacifico(
@@ -204,13 +221,7 @@ class _LoginPageState extends State<LoginPage> {
           ),
           textAlign: TextAlign.center,
         ),
-      ],
-    );
-  }
-
-  Widget _buildSubtitle() {
-    return Column(
-      children: [
+        const SizedBox(height: 10.0),
         Text(
           'Silahkan login untuk masuk ke akun Anda.',
           style: GoogleFonts.poppins(
@@ -295,7 +306,7 @@ class _LoginPageState extends State<LoginPage> {
           gradient: LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [AppColor.myblue, AppColor.myblue1, AppColor.myblue],
+            colors: [AppColor.myblue, AppColor.myblue],
           ),
           boxShadow: [
             BoxShadow(
@@ -340,8 +351,8 @@ class _LoginPageState extends State<LoginPage> {
         'Lupa Kata Sandi?',
         style: TextStyle(
           color: Colors.white70,
-          decoration: TextDecoration.underline,
-          decorationColor: Colors.white70,
+          // decoration: TextDecoration.underline,
+          // decorationColor: Colors.white70,
         ),
       ),
     );
@@ -367,8 +378,8 @@ class _LoginPageState extends State<LoginPage> {
             style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
-              decoration: TextDecoration.underline,
-              decorationColor: Colors.white,
+              // decoration: TextDecoration.underline,
+              // decorationColor: Colors.white,
             ),
           ),
         ),

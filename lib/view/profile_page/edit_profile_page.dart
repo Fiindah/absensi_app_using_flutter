@@ -203,110 +203,145 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.neutral,
-      appBar: AppBar(
-        title: const Text(
-          'Edit Profil',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-        ),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        backgroundColor: AppColor.myblue,
-        foregroundColor: Colors.white,
-        elevation: 0,
-        centerTitle: true,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColor.myblue, AppColor.myblue1],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: _pickedImage != null
-                        ? FileImage(_pickedImage!)
-                        : NetworkImage(_profileImageUrl) as ImageProvider,
-                    backgroundColor: AppColor.myblue,
-                  ),
-                  TextButton.icon(
-                    onPressed: _pickImage,
-                    icon: const Icon(
-                      Icons.camera_alt,
-                      color: AppColor.myblue,
-                      size: 20,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWideScreen = constraints.maxWidth > 600;
+
+          return Center(
+            child: Container(
+              width: isWideScreen ? 400 : double.infinity,
+              decoration: isWideScreen
+                  ? BoxDecoration(
+                      color: Colors.white,
+                      // borderRadius: BorderRadius.circular(16),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    )
+                  : null,
+              child: Scaffold(
+                backgroundColor: AppColor.neutral,
+                appBar: AppBar(
+                  title: const Text(
+                    'Edit Profil',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
                     ),
-                    style: TextButton.styleFrom(
-                      foregroundColor: AppColor.myblue,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
+                  ),
+                  leading: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  backgroundColor: AppColor.myblue,
+                  foregroundColor: Colors.white,
+                  elevation: 0,
+                  centerTitle: true,
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [AppColor.myblue, AppColor.myblue1],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
                     ),
-                    label: const Text("Ubah Foto"),
                   ),
-                  const SizedBox(height: 20),
-                  _buildTextField(
-                    _nameController,
-                    'Nama Lengkap',
-                    Icons.person,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildTextField(
-                    _emailController,
-                    'Email',
-                    Icons.email,
-                    readOnly: true,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildDropdown(
-                    _selectedGender,
-                    _genders,
-                    'Jenis Kelamin',
-                    Icons.wc,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildDropdownItem<Batch>(
-                    _selectedBatch,
-                    _batches,
-                    'Batch',
-                    Icons.group,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildDropdownItem<Training>(
-                    _selectedTraining,
-                    _trainings,
-                    'Training',
-                    Icons.school,
-                  ),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: _isSaving ? null : _saveChanges,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.myblue,
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    child: _isSaving
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Simpan Perubahan',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
-                          ),
-                  ),
-                ],
+                ),
+                body: _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          children: [
+                            CircleAvatar(
+                              radius: 60,
+                              backgroundImage: _pickedImage != null
+                                  ? FileImage(_pickedImage!)
+                                  : NetworkImage(_profileImageUrl)
+                                        as ImageProvider,
+                              backgroundColor: AppColor.myblue,
+                            ),
+                            TextButton.icon(
+                              onPressed: _pickImage,
+                              icon: const Icon(
+                                Icons.camera_alt,
+                                color: AppColor.myblue,
+                                size: 20,
+                              ),
+                              style: TextButton.styleFrom(
+                                foregroundColor: AppColor.myblue,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                  horizontal: 16,
+                                ),
+                              ),
+                              label: const Text("Ubah Foto"),
+                            ),
+                            const SizedBox(height: 20),
+                            _buildTextField(
+                              _nameController,
+                              'Nama Lengkap',
+                              Icons.person,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildTextField(
+                              _emailController,
+                              'Email',
+                              Icons.email,
+                              readOnly: true,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildDropdown(
+                              _selectedGender,
+                              _genders,
+                              'Jenis Kelamin',
+                              Icons.wc,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildDropdownItem<Batch>(
+                              _selectedBatch,
+                              _batches,
+                              'Batch',
+                              Icons.group,
+                            ),
+                            const SizedBox(height: 16),
+                            _buildDropdownItem<Training>(
+                              _selectedTraining,
+                              _trainings,
+                              'Training',
+                              Icons.school,
+                            ),
+                            const SizedBox(height: 30),
+                            ElevatedButton(
+                              onPressed: _isSaving ? null : _saveChanges,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.myblue,
+                                minimumSize: const Size.fromHeight(50),
+                              ),
+                              child: _isSaving
+                                  ? const CircularProgressIndicator(
+                                      color: Colors.white,
+                                    )
+                                  : const Text(
+                                      'Simpan Perubahan',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                            ),
+                          ],
+                        ),
+                      ),
               ),
             ),
+          );
+        },
+      ),
     );
   }
 

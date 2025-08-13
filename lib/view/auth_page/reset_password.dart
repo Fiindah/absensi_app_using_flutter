@@ -88,153 +88,178 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         'email tidak ditemukan';
 
     return Scaffold(
-      backgroundColor: AppColor.neutral, // Konsisten dengan halaman lain
-      appBar: AppBar(
-        centerTitle: true,
-        title: const Text(
-          'Reset Password',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        backgroundColor: AppColor.myblue,
-        foregroundColor: Colors.white,
-        elevation: 0.5,
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [AppColor.myblue, AppColor.myblue1],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-      ),
-      body: Center(
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                const Text(
-                  "Atur Ulang Kata Sandi",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.myblue,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "Kami telah mengirimkan kode verifikasi ke email Anda. Silakan masukkan kode dan kata sandi baru Anda.",
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(fontSize: 15, color: Colors.black54),
-                ),
-                const SizedBox(height: 40),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWideScreen = constraints.maxWidth > 600;
 
-                // Input OTP
-                _buildTitle("Kode Verifikasi (OTP)"),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _otpController,
-                  keyboardType: TextInputType.number, // OTP biasanya angka
-                  decoration: _buildInputDecoration(
-                    hintText: "Masukkan kode OTP",
-                    prefixIcon: Icons.vpn_key_outlined,
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Kode OTP tidak boleh kosong';
-                    }
-                    if (value.length < 4) {
-                      // Asumsi OTP 4 digit atau lebih
-                      return 'Kode OTP minimal 4 digit';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 20),
-
-                // Input Password Baru
-                _buildTitle("Kata Sandi Baru"),
-                const SizedBox(height: 12),
-                TextFormField(
-                  controller: _passwordController,
-                  obscureText: !_isPasswordVisible,
-                  decoration: _buildInputDecoration(
-                    hintText: "Masukkan kata sandi baru",
-                    prefixIcon: Icons.lock_outline,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: AppColor.gray88,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible = !_isPasswordVisible;
-                        });
-                      },
+          return Center(
+            child: Container(
+              width: isWideScreen
+                  ? 400
+                  : double.infinity, // max width di web/desktop
+              decoration: isWideScreen
+                  ? BoxDecoration(
+                      color: Colors.blue,
+                      // borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    )
+                  : null,
+              child: Scaffold(
+                backgroundColor:
+                    AppColor.neutral, // Konsisten dengan halaman lain
+                appBar: AppBar(
+                  leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.black87,
                     ),
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Kata sandi tidak boleh kosong';
-                    }
-                    if (value.length < 6) {
-                      return 'Kata sandi minimal 6 karakter';
-                    }
-                    return null;
-                  },
+                  backgroundColor: AppColor.neutral,
                 ),
-
-                const SizedBox(height: 30),
-
-                // Tombol Reset Password
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _loading ? null : () => _resetPassword(email),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColor.myblue,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      elevation: 4,
-                    ),
-                    child: _loading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                Colors.white,
-                              ),
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : const Text(
-                            "Reset Kata Sandi",
+                body: Center(
+                  child: Form(
+                    key: _formKey,
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.all(24.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Text(
+                            "Atur Ulang Kata Sandi",
+                            textAlign: TextAlign.center,
                             style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 24,
                               fontWeight: FontWeight.bold,
+                              color: AppColor.myblue,
                             ),
                           ),
+                          const SizedBox(height: 10),
+                          Text(
+                            "Kami telah mengirimkan kode verifikasi ke email Anda. Silakan masukkan kode dan kata sandi baru Anda.",
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              color: Colors.black54,
+                            ),
+                          ),
+                          const SizedBox(height: 40),
+
+                          // Input OTP
+                          _buildTitle("Kode Verifikasi (OTP)"),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _otpController,
+                            keyboardType:
+                                TextInputType.number, // OTP biasanya angka
+                            decoration: _buildInputDecoration(
+                              hintText: "Masukkan kode OTP",
+                              prefixIcon: Icons.vpn_key_outlined,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Kode OTP tidak boleh kosong';
+                              }
+                              if (value.length < 4) {
+                                // Asumsi OTP 4 digit atau lebih
+                                return 'Kode OTP minimal 4 digit';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 20),
+
+                          // Input Password Baru
+                          _buildTitle("Kata Sandi Baru"),
+                          const SizedBox(height: 12),
+                          TextFormField(
+                            controller: _passwordController,
+                            obscureText: !_isPasswordVisible,
+                            decoration: _buildInputDecoration(
+                              hintText: "Masukkan kata sandi baru",
+                              prefixIcon: Icons.lock_outline,
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _isPasswordVisible
+                                      ? Icons.visibility
+                                      : Icons.visibility_off,
+                                  color: AppColor.gray88,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _isPasswordVisible = !_isPasswordVisible;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Kata sandi tidak boleh kosong';
+                              }
+                              if (value.length < 6) {
+                                return 'Kata sandi minimal 6 karakter';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          const SizedBox(height: 30),
+
+                          // Tombol Reset Password
+                          SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: ElevatedButton(
+                              onPressed: _loading
+                                  ? null
+                                  : () => _resetPassword(email),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColor.myblue,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                elevation: 4,
+                              ),
+                              child: _loading
+                                  ? const SizedBox(
+                                      width: 24,
+                                      height: 24,
+                                      child: CircularProgressIndicator(
+                                        valueColor:
+                                            AlwaysStoppedAnimation<Color>(
+                                              Colors.white,
+                                            ),
+                                        strokeWidth: 2,
+                                      ),
+                                    )
+                                  : const Text(
+                                      "Reset Kata Sandi",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
@@ -256,23 +281,23 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
         horizontal: 16.0,
       ),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(30),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(30),
         borderSide: BorderSide(color: Colors.grey.shade300, width: 1.0),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(30),
         borderSide: BorderSide(color: AppColor.myblue, width: 2.0),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(30),
         borderSide: const BorderSide(color: Colors.red, width: 2.0),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(30),
         borderSide: const BorderSide(color: Colors.red, width: 2.0),
       ),
       filled: true,
@@ -296,7 +321,6 @@ class _ResetPasswordPageState extends State<ResetPasswordPage> {
     );
   }
 }
-
 // import 'dart:convert';
 
 // import 'package:aplikasi_absensi/api/endpoint.dart';

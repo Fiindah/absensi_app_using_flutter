@@ -44,35 +44,67 @@ class _ButtonNavbarPageState extends State<ButtonNavbarPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          bool isWideScreen = constraints.maxWidth > 600;
+          return Center(
+            child: Container(
+              width: isWideScreen ? 400 : double.infinity,
+              decoration: isWideScreen
+                  ? BoxDecoration(
+                      color: Colors.white,
+                      // borderRadius: BorderRadius.circular(16),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 10,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    )
+                  : null,
+              child: Scaffold(
+                body: PageView(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _selectedIndex = index;
+                    });
+                  },
+                  children: _pages,
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  items: const <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.home_outlined),
+                      label: 'Beranda',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.alarm),
+                      label: 'Riwayat',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.person_2_outlined),
+                      label: 'Profil',
+                    ),
+                  ],
+                  currentIndex: _selectedIndex,
+                  selectedItemColor: AppColor.myblue,
+                  unselectedItemColor: Colors.grey,
+                  onTap: _onItemTapped,
+                  type: BottomNavigationBarType.fixed,
+                  backgroundColor: Colors.white,
+                  selectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              ),
+            ),
+          );
         },
-        children: _pages,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home_outlined),
-            label: 'Beranda',
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.alarm), label: 'Riwayat'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person_2_outlined),
-            label: 'Profil',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: AppColor.myblue,
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.white,
-        selectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold),
-        unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.normal),
       ),
     );
   }

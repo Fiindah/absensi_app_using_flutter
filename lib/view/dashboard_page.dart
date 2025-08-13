@@ -112,7 +112,6 @@ class _DashboardPageState extends State<DashboardPage> {
           return Center(
             child: Container(
               width: isWideScreen ? 400 : double.infinity,
-              padding: const EdgeInsets.all(20),
               decoration: isWideScreen
                   ? BoxDecoration(
                       color: Colors.white,
@@ -322,10 +321,28 @@ class _DashboardPageState extends State<DashboardPage> {
                                     'dd MMM yyyy',
                                     'id_ID',
                                   ).format(DateTime.parse(item.attendanceDate));
-                                  return Card(
-                                    elevation: 2,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                                  return Container(
+                                    // elevation: 2,
+                                    // shape: RoundedRectangleBorder(
+                                    //   borderRadius: BorderRadius.circular(12),
+                                    // ),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          Colors.white,
+                                          Colors.blue.shade50,
+                                        ],
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                      ),
+                                      borderRadius: BorderRadius.circular(16),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 6,
+                                          offset: const Offset(0, 3),
+                                        ),
+                                      ],
                                     ),
                                     margin: const EdgeInsets.only(bottom: 10),
                                     child: ListTile(
