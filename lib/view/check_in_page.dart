@@ -23,11 +23,9 @@ class _CheckInPageState extends State<CheckInPage> {
   String _statusMessage = 'Sedang mengambil lokasi...';
   Color _messageColor = Colors.black;
   Position? _currentPosition;
+  String? _currentAddress;
 
-  static const LatLng _ppkdLocation = LatLng(
-    -6.2109,
-    106.8129,
-  ); // PPKD Jakarta Pusat
+  static const LatLng _ppkdLocation = LatLng(-6.2109, 106.8129);
 
   @override
   void initState() {
@@ -56,6 +54,24 @@ class _CheckInPageState extends State<CheckInPage> {
 
       Position position = await Geolocator.getCurrentPosition();
       setState(() => _currentPosition = position);
+
+      try {
+        List<Placemark> placemarks = await placemarkFromCoordinates(
+          _currentPosition!.latitude,
+          _currentPosition!.longitude,
+        );
+        if (placemarks.isNotEmpty) {
+          Placemark place = placemarks.first;
+          setState(() {
+            _currentAddress =
+                '${place.street}, ${place.locality}, ${place.administrativeArea}, ${place.country}';
+          });
+        }
+      } catch (e) {
+        setState(() {
+          _currentAddress = 'Gagal mendapatkan alamat.';
+        });
+      }
     } catch (e) {
       _showMessage('Gagal mendapatkan lokasi: $e', color: Colors.red);
     } finally {
@@ -68,35 +84,7 @@ class _CheckInPageState extends State<CheckInPage> {
     setState(() => _isLoading = true);
 
     try {
-      // Hitung jarak ke titik pusat (PPKD)
-      double distance = Geolocator.distanceBetween(
-        _currentPosition!.latitude,
-        _currentPosition!.longitude,
-        _ppkdLocation.latitude,
-        _ppkdLocation.longitude,
-      );
-
-      if (distance > 100) {
-        _showMessage(
-          'Anda berada di luar area absen (> ${distance.toStringAsFixed(1)} meter).',
-          color: Colors.red,
-        );
-        setState(() => _isLoading = false);
-        return;
-      }
-
-      // Ambil alamat dari koordinat
-      String address = 'Alamat tidak diketahui';
-      try {
-        List<Placemark> placemarks = await placemarkFromCoordinates(
-          _currentPosition!.latitude,
-          _currentPosition!.longitude,
-        );
-        if (placemarks.isNotEmpty) {
-          Placemark place = placemarks.first;
-          address = '${place.street}, ${place.locality}';
-        }
-      } catch (_) {}
+      String address = _currentAddress ?? 'Alamat tidak diketahui';
 
       final now = DateTime.now();
       final response = await _authService.checkInAttendance(
@@ -188,67 +176,156 @@ class _CheckInPageState extends State<CheckInPage> {
                 ),
                 body: _currentPosition == null
                     ? const Center(child: CircularProgressIndicator())
-                    : Stack(
+                    : Column(
                         children: [
-                          GoogleMap(
-                            onMapCreated: (controller) =>
-                                _mapController = controller,
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(
-                                _currentPosition!.latitude,
-                                _currentPosition!.longitude,
-                              ),
-                              zoom: 17,
-                            ),
-                            myLocationEnabled: true,
-                            myLocationButtonEnabled: true,
-                            markers: {
-                              Marker(
-                                markerId: const MarkerId('current'),
-                                position: LatLng(
+                          Expanded(
+                            child: GoogleMap(
+                              onMapCreated: (controller) =>
+                                  _mapController = controller,
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(
                                   _currentPosition!.latitude,
                                   _currentPosition!.longitude,
                                 ),
-                                infoWindow: const InfoWindow(
-                                  title: 'Lokasi Anda',
+                                zoom: 17,
+                              ),
+                              myLocationEnabled: true,
+                              myLocationButtonEnabled: true,
+                              markers: {
+                                Marker(
+                                  markerId: const MarkerId('current'),
+                                  position: LatLng(
+                                    _currentPosition!.latitude,
+                                    _currentPosition!.longitude,
+                                  ),
+                                  infoWindow: InfoWindow(
+                                    title: _currentAddress ?? 'Lokasi Anda',
+                                  ),
                                 ),
-                              ),
-                              Marker(
-                                markerId: const MarkerId('ppkd'),
-                                position: _ppkdLocation,
-                                infoWindow: const InfoWindow(
-                                  title: 'PPKD Jakarta Pusat',
+                                Marker(
+                                  markerId: const MarkerId('ppkd'),
+                                  position: _ppkdLocation,
+                                  infoWindow: const InfoWindow(
+                                    title: 'PPKD Jakarta Pusat',
+                                  ),
                                 ),
-                              ),
-                            },
-                            circles: {
-                              Circle(
-                                circleId: const CircleId("ppkd_radius"),
-                                center: _ppkdLocation,
-                                radius: 100,
-                                fillColor: Colors.blue.withOpacity(0.2),
-                                strokeColor: Colors.blueAccent,
-                                strokeWidth: 2,
-                              ),
-                            },
+                              },
+                              circles: {
+                                Circle(
+                                  circleId: const CircleId("ppkd_radius"),
+                                  center: _ppkdLocation,
+                                  radius: 100,
+                                  fillColor: Colors.blue.withOpacity(0.2),
+                                  strokeColor: Colors.blueAccent,
+                                  strokeWidth: 2,
+                                ),
+                              },
+                            ),
                           ),
-                          Positioned(
-                            bottom: 20,
-                            left: 20,
-                            right: 20,
-                            child: ElevatedButton.icon(
-                              onPressed: _isLoading ? null : _checkIn,
-                              // icon: const Icon(Icons.login, color: Colors.white),
-                              label: const Text(
-                                "Absen Masuk",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColor.myblue,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 16.0,
+                          Container(
+                            width: double.infinity,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 10,
+                                  offset: Offset(0, -4),
                                 ),
+                              ],
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(20),
+                                topRight: Radius.circular(20),
                               ),
+                            ),
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                if (_currentAddress != null)
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0,
+                                      vertical: 12.0,
+                                    ),
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const Icon(
+                                          Icons.location_on,
+                                          color: AppColor.myblue,
+                                          size: 24,
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Text(
+                                                "Lokasi Anda Saat Ini:",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14,
+                                                  color: Colors.black87,
+                                                ),
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Text(
+                                                _currentAddress!,
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.black54,
+                                                ),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 2,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                const SizedBox(height: 20),
+                                ElevatedButton(
+                                  onPressed: _isLoading ? null : _checkIn,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColor.myblue,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 16.0,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    elevation: 8,
+                                  ),
+                                  child: _isLoading
+                                      ? const CircularProgressIndicator(
+                                          color: Colors.white,
+                                        )
+                                      : Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(
+                                              Icons.login,
+                                              color: Colors.white,
+                                            ),
+                                            SizedBox(width: 12),
+                                            Text(
+                                              "Absen Masuk",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 16,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
