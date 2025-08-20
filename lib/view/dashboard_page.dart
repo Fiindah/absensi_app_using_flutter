@@ -184,7 +184,6 @@ class _DashboardPageState extends State<DashboardPage> {
                                       _fetchTodayAttendanceStatus();
                                   });
                                 },
-                                icon: const Icon(Icons.login),
                                 label: const Text(
                                   "CHECK IN",
                                   style: TextStyle(color: Colors.white),
@@ -212,7 +211,6 @@ class _DashboardPageState extends State<DashboardPage> {
                                       _fetchTodayAttendanceStatus();
                                   });
                                 },
-                                icon: const Icon(Icons.logout),
                                 label: const Text(
                                   "CHECK OUT",
                                   style: TextStyle(color: Colors.white),
@@ -252,42 +250,98 @@ class _DashboardPageState extends State<DashboardPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(
-                                        'Status Hari Ini',
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: AppColor.myblue,
-                                        ),
-                                      ),
-                                      const Divider(
-                                        height: 24,
-                                        thickness: 1,
-                                        color: Colors.grey,
-                                      ),
+                                      // Text(
+                                      //   'Status Hari Ini',
+                                      //   style: TextStyle(
+                                      //     fontSize: 18,
+                                      //     fontWeight: FontWeight.bold,
+                                      //     color: AppColor.myblue,
+                                      //   ),
+                                      // ),
+                                      // const Divider(
+                                      //   height: 24,
+                                      //   thickness: 1,
+                                      //   color: Colors.grey,
+                                      // ),
                                       if (_todayAttendance != null) ...[
-                                        _buildInfoRow(
-                                          'Status',
-                                          _todayAttendance!.status,
+                                        // Tampilkan status
+                                        Text(
+                                          'Status Kehadiran : ${_todayAttendance!.status}',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColor.myblue,
+                                          ),
                                         ),
-                                        if (_todayAttendance!.checkInTime !=
-                                            null)
-                                          _buildInfoRow(
-                                            'Check-in',
-                                            _todayAttendance!.checkInTime!,
-                                          ),
-                                        if (_todayAttendance!.checkOutTime !=
-                                            null)
-                                          _buildInfoRow(
-                                            'Check-out',
-                                            _todayAttendance!.checkOutTime!,
-                                          ),
+
+                                        const Divider(
+                                          height: 24,
+                                          thickness: 1,
+                                          color: Colors.grey,
+                                        ),
+                                        const SizedBox(height: 8),
+
+                                        // Header Check In & Out
+                                        const Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              'CHECK IN',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            Text(
+                                              'CHECK OUT',
+                                              style: TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 4),
+
+                                        // Value
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceAround,
+                                          children: [
+                                            Text(
+                                              _todayAttendance!.checkInTime ??
+                                                  '-',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+
+                                            Text(
+                                              _todayAttendance!.checkOutTime ??
+                                                  '-',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
                                         if (_todayAttendance!.status
                                                 .toLowerCase() ==
                                             'izin')
-                                          _buildInfoRow(
-                                            'Alasan',
-                                            _todayAttendance!.alasanIzin ?? '-',
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8.0,
+                                            ),
+                                            child: Text(
+                                              'Alasan: ${_todayAttendance!.alasanIzin ?? '-'}',
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                              ),
+                                            ),
                                           ),
                                       ] else
                                         const Text(
@@ -298,6 +352,7 @@ class _DashboardPageState extends State<DashboardPage> {
                                   ),
                           ),
                         ),
+
                         const SizedBox(height: 24),
                         Text(
                           'Riwayat Terkini',
@@ -315,60 +370,114 @@ class _DashboardPageState extends State<DashboardPage> {
                                 'Belum ada data riwayat.',
                                 style: TextStyle(color: Colors.grey),
                               )
-                            : Column(
-                                children: _recentHistory.map((item) {
-                                  final dateFormatted = DateFormat(
-                                    'dd MMM yyyy',
-                                    'id_ID',
-                                  ).format(DateTime.parse(item.attendanceDate));
-                                  return Container(
-                                    // elevation: 2,
-                                    // shape: RoundedRectangleBorder(
-                                    //   borderRadius: BorderRadius.circular(12),
-                                    // ),
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors: [
-                                          Colors.white,
-                                          Colors.blue.shade50,
-                                        ],
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      ),
-                                      borderRadius: BorderRadius.circular(16),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 6,
-                                          offset: const Offset(0, 3),
+                            : Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: _recentHistory.map((item) {
+                                    final dateFormatted =
+                                        DateFormat(
+                                          'EEEE, dd MMMM yyyy',
+                                          'id_ID',
+                                        ).format(
+                                          DateTime.parse(item.attendanceDate),
+                                        );
+                                    return Container(
+                                      // elevation: 2,
+                                      // shape: RoundedRectangleBorder(
+                                      //   borderRadius: BorderRadius.circular(12),
+                                      // ),
+                                      decoration: BoxDecoration(
+                                        gradient: LinearGradient(
+                                          colors: [
+                                            Colors.white,
+                                            Colors.blue.shade50,
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
                                         ),
-                                      ],
-                                    ),
-                                    margin: const EdgeInsets.only(bottom: 10),
-                                    child: ListTile(
-                                      leading: Icon(
-                                        item.status == 'masuk'
-                                            ? Icons.check_circle
-                                            : item.status == 'izin'
-                                            ? Icons.info_outline
-                                            : Icons.cancel,
-                                        color: item.status == 'masuk'
-                                            ? Colors.green
-                                            : item.status == 'izin'
-                                            ? Colors.orange
-                                            : Colors.red,
-                                      ),
-                                      title: Text(dateFormatted),
-                                      subtitle: item.status == 'izin'
-                                          ? Text(
-                                              'Izin: ${item.alasanIzin ?? '-'}',
-                                            )
-                                          : Text(
-                                              'Check In: ${item.checkInTime ?? '-'} | Check Out: ${item.checkOutTime ?? '-'}',
+                                        borderRadius: BorderRadius.circular(16),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black.withOpacity(
+                                              0.1,
                                             ),
-                                    ),
-                                  );
-                                }).toList(),
+                                            blurRadius: 6,
+                                            offset: const Offset(0, 3),
+                                          ),
+                                        ],
+                                      ),
+                                      margin: const EdgeInsets.only(bottom: 10),
+                                      child: ListTile(
+                                        leading: Icon(
+                                          item.status == 'masuk'
+                                              ? Icons.check_circle
+                                              : item.status == 'izin'
+                                              ? Icons.info_outline
+                                              : Icons.cancel,
+                                          color: item.status == 'masuk'
+                                              ? Colors.green
+                                              : item.status == 'izin'
+                                              ? Colors.orange
+                                              : Colors.red,
+                                        ),
+                                        title: Text(
+                                          dateFormatted,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+
+                                        subtitle: Padding(
+                                          padding: const EdgeInsets.only(
+                                            top: 8,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Text(
+                                                    'CHECK IN',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    'CHECK OUT',
+                                                    style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 12,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 4),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  Text(item.checkInTime ?? '-'),
+                                                  Text(
+                                                    item.checkOutTime ?? '-',
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                         Align(
                           alignment: Alignment.centerRight,
@@ -386,12 +495,14 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const CopyrightWidget(
-                          appName: 'Endah F N',
-                          companyName: 'Si Absensi',
-                          textColor: Colors.grey,
-                          fontSize: 10.0,
-                        ),
+                        const CopyrightOverlay(),
+
+                        // const CopyrightWidget(
+                        //   devName: 'Si Absensi',
+                        //   appName: 'Endah F N',
+                        //   textColor: Colors.grey,
+                        //   fontSize: 10.0,
+                        // ),
                       ],
                     ),
                   ),
@@ -404,32 +515,32 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(width: 12),
-          Text(
-            '$label:',
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
-              color: AppColor.myblue,
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 14, color: AppColor.gray88),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  //   Widget _buildInfoRow(String label, String value) {
+  //     return Padding(
+  //       padding: const EdgeInsets.symmetric(vertical: 8),
+  //       child: Row(
+  //         crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           const SizedBox(width: 12),
+  //           Text(
+  //             '$label:',
+  //             style: const TextStyle(
+  //               fontWeight: FontWeight.bold,
+  //               fontSize: 14,
+  //               color: AppColor.myblue,
+  //             ),
+  //           ),
+  //           const SizedBox(width: 8),
+  //           Expanded(
+  //             child: Text(
+  //               value,
+  //               style: const TextStyle(fontSize: 14, color: AppColor.gray88),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   }
 }
 
 // import 'package:aplikasi_absensi/api/api_service.dart';

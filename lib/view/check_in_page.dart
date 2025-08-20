@@ -150,7 +150,7 @@ class _CheckInPageState extends State<CheckInPage> {
                 backgroundColor: AppColor.neutral,
                 appBar: AppBar(
                   title: const Text(
-                    'Absen Masuk',
+                    'Kehadiran',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'package:aplikasi_absensi/api/api_service.dart';
 import 'package:aplikasi_absensi/constant/app_color.dart';
+import 'package:aplikasi_absensi/copy_right.dart';
 import 'package:aplikasi_absensi/models/history_model.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

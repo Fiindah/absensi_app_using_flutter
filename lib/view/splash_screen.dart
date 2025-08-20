@@ -2,6 +2,8 @@ import 'package:aplikasi_absensi/helper/share_pref.dart';
 import 'package:aplikasi_absensi/view/auth_page/login_page.dart';
 import 'package:aplikasi_absensi/view/buttom_navbar_page.dart';
 import 'package:flutter/material.dart';
+import 'package:aplikasi_absensi/constant/app_color.dart';
+import 'package:aplikasi_absensi/copy_right.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -63,6 +65,7 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColor.neutral,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -75,6 +78,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 200,
               ),
             ),
+            const CopyrightOverlay(),
           ],
         ),
       ),

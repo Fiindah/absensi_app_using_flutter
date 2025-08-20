@@ -1,6 +1,7 @@
 import 'package:aplikasi_absensi/api/api_service.dart';
 import 'package:aplikasi_absensi/api/endpoint.dart';
 import 'package:aplikasi_absensi/constant/app_color.dart';
+import 'package:aplikasi_absensi/copy_right.dart';
 import 'package:aplikasi_absensi/helper/share_pref.dart';
 import 'package:aplikasi_absensi/models/profile_model.dart';
 import 'package:aplikasi_absensi/view/auth_page/login_page.dart';
@@ -259,16 +260,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                         color: AppColor.myblue,
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      _userProfile?.email ??
-                                          'email@example.com',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        fontSize: 17,
-                                        color: Colors.grey.shade600,
-                                      ),
-                                    ),
+                                    // const SizedBox(height: 8),
+                                    // Text(
+                                    //   _userProfile?.email ??
+                                    //       'email@example.com',
+                                    //   textAlign: TextAlign.center,
+                                    //   style: TextStyle(
+                                    //     fontSize: 17,
+                                    //     color: Colors.grey.shade600,
+                                    //   ),
+                                    // ),
                                   ],
                                 ),
                                 const SizedBox(height: 24),
@@ -294,23 +295,22 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
 
                                           _buildDivider(),
+                                          // _buildInfoRow(
+                                          //   Icons.person_outline,
+                                          //   'Nama',
+                                          //   _userProfile?.name ?? '-',
+                                          // ),
+                                          // _buildDivider(),
                                           _buildInfoRow(
-                                            Icons.person_outline,
-                                            'Nama',
-                                            _userProfile?.name ?? '-',
-                                          ),
-                                          _buildDivider(),
-                                          _buildInfoRow(
-                                            Icons
-                                                .email_outlined, // Changed icon
+                                            Icons.email_outlined,
                                             'Email',
                                             _userProfile?.email ?? '-',
                                           ),
                                           _buildDivider(),
 
-                                          _buildDivider(),
+                                          // _buildDivider(),
                                           _buildInfoRow(
-                                            Icons.wc_outlined, // Changed icon
+                                            Icons.wc_outlined,
                                             'Jenis Kelamin',
                                             _formatGender(
                                               _userProfile?.jenisKelamin,
@@ -323,15 +323,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                             'Informasi Akademik',
                                           ),
                                           _buildInfoColumn(
-                                            Icons
-                                                .group_outlined, // Changed icon
+                                            Icons.group_outlined,
                                             'Batch :',
                                             _userProfile?.batchKe ?? '-',
                                           ),
                                           _buildDivider(),
                                           _buildInfoColumn(
-                                            Icons
-                                                .school_outlined, // Changed icon
+                                            Icons.school_outlined,
                                             'Training :',
                                             _userProfile?.trainingTitle ?? '-',
                                           ),
@@ -378,6 +376,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ),
                                 ),
                                 const SizedBox(height: 24),
+                                const CopyrightOverlay(),
                               ],
                             ),
                           ),

@@ -150,7 +150,7 @@ class _CheckOutPageState extends State<CheckOutPage> {
                 backgroundColor: AppColor.neutral,
                 appBar: AppBar(
                   title: const Text(
-                    'Absen Pulang',
+                    'Kehadiran',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

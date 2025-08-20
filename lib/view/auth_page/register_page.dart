@@ -205,12 +205,14 @@ class _RegisterPageState extends State<RegisterPage> {
                             const SizedBox(height: 20.0),
                             _buildLoginLink(),
                             const SizedBox(height: 20.0),
-                            const CopyrightWidget(
-                              appName: 'Endah F N',
-                              companyName: 'Si Absensi',
-                              textColor: Colors.white70,
-                              fontSize: 10.0,
-                            ),
+                            const CopyrightOverlay(textColor: Colors.white70),
+
+                            // const CopyrightWidget(
+                            //   appName: 'Si Absensi',
+                            //   devName: 'Endah F N',
+                            //   textColor: Colors.white70,
+                            //   fontSize: 10.0,
+                            // ),
                           ],
                         ),
                       ),
