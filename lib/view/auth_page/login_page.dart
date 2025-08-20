@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
                           const SizedBox(height: 20.0),
                           _buildSignUpLink(),
                           const SizedBox(height: 10.0),
-                          const CopyrightOverlay(textColor: Colors.white70),
+                          const CopyrightWidget(textColor: Colors.white70),
                         ],
                       ),
                     ),

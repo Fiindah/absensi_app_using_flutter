@@ -495,7 +495,7 @@ class _DashboardPageState extends State<DashboardPage> {
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const CopyrightOverlay(),
+                        const CopyrightWidget(),
 
                         // const CopyrightWidget(
                         //   devName: 'Si Absensi',
