@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen>
                 height: 200,
               ),
             ),
-            const Spacer(),
+            const SizedBox(height: 24),
             const CopyrightWidget(),
           ],
         ),
